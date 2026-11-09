@@ -9,7 +9,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600&family=Caveat:wght@600;700&display=swap" rel="stylesheet">
 <style>
-/* ===== GURUH LINKI: pastdagi skriptda GROUP_LINK ni o'zgartiring ===== */
 :root{
   --blue:#3E97E0; --pink:#E8578A; --navy:#1C2A44; --muted:#5A6782;
   --yellow:#F2CF7C; --lav:#C9B6E4; --sky:#DCE8F6; --sky2:#EEF3FA; --line:#DCE8F6;
@@ -93,7 +92,9 @@ h2{font-size:30px;line-height:1.1;margin-top:6px;font-weight:800}
 .cta svg{width:22px;height:22px}
 .cta:active{transform:scale(.97)}
 .cta.off{opacity:.45;box-shadow:none}
-.hint{font-size:13.5px;color:var(--muted);margin-top:12px}
+.luck{animation:luckIn .5s cubic-bezier(.2,1.4,.4,1) both}
+.luck[hidden]{display:none}
+@keyframes luckIn{from{opacity:0;transform:translateY(12px) scale(.95)}to{opacity:1;transform:none}}
 
 #fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:40}
 /* ---------- INTRO: tabrik + xat ---------- */
@@ -215,17 +216,11 @@ body.locked{overflow:hidden}
       <span class="box"><svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span>
       <span>Guruh qoidalari bilan tanishdim va ularga amal qilaman</span>
     </label>
-    <a class="cta off" id="joinBtn" href="https://t.me/m/kR-L4CbkMTY6" target="_blank" rel="noopener">
-      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.9 4.3c.3-1.3-1-2.3-2.2-1.8L2.9 9c-1.3.5-1.2 2.4.1 2.8l4.1 1.3 1.6 5c.3 1 1.6 1.3 2.3.6l2.3-2.2 4.4 3.2c.9.7 2.3.2 2.5-.9L21.9 4.3zM9.6 14.2l8.1-7.3-6.6 8.5-.3 3-1.2-4.2z"/></svg>
-      Darslarni boshlash
-    </a>
-    <p class="hint" id="hint">Avval qoidalarga rozilik belgisini qo'ying ☝️</p>
+    <button class="cta luck" id="luckBtn" type="button" hidden>O'qishingizga omad! 🤍</button>
   </section>
 </main>
 
 <script>
-/* ===== Guruh linkini shu yerga yozing ===== */
-var GROUP_LINK = 'https://t.me/m/kR-L4CbkMTY6';
 
 (function(){
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -280,26 +275,14 @@ var GROUP_LINK = 'https://t.me/m/kR-L4CbkMTY6';
   env.addEventListener('click',openLetter);
   document.getElementById('openBtn').addEventListener('click',openLetter);
 
-  /* --- agree + join --- */
-  var ag=document.getElementById('agree'), cb=document.getElementById('agreeCb'), btn=document.getElementById('joinBtn'), hint=document.getElementById('hint');
-  btn.href=GROUP_LINK;
-  function sync(){
+  /* --- agree + omad --- */
+  var ag=document.getElementById('agree'), cb=document.getElementById('agreeCb'), luck=document.getElementById('luckBtn');
+  cb.addEventListener('change',function(){
     ag.classList.toggle('checked',cb.checked);
-    btn.classList.toggle('off',!cb.checked);
-    hint.textContent = cb.checked ? 'Ajoyib! Darslarda ko\'rishguncha 🤍' : "Avval qoidalarga rozilik belgisini qo'ying ☝️";
-  }
-  cb.addEventListener('change',sync);
-  btn.addEventListener('click',function(e){
-    if(!cb.checked){
-      e.preventDefault();
-      ag.classList.remove('shake'); void ag.offsetWidth; ag.classList.add('shake');
-      return;
-    }
-    var r=btn.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,2);
-    if(window.Telegram && Telegram.WebApp && Telegram.WebApp.openTelegramLink && /^https:\/\/t\.me\//.test(GROUP_LINK)){
-      e.preventDefault(); setTimeout(function(){ Telegram.WebApp.openTelegramLink(GROUP_LINK); },350);
-    }
+    luck.hidden=!cb.checked;
+    if(cb.checked){ var r=luck.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,2); }
   });
+  luck.addEventListener('click',function(){ var r=luck.getBoundingClientRect(); burst(r.left+r.width/2,r.top,40,2); });
 })();
 </script>
 </body>
